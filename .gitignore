@@ -1,0 +1,11 @@
+#################
+## Eclipse
+#################
+# .project
+# .classpath    
+# .settings/
+
+
+################### Node.js
+#################   
+node_modules/
