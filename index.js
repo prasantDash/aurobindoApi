@@ -68,6 +68,22 @@ app.post('/api/user/profile', async (req, res) => {
         res.status(500).send('Error fetching products');
     }
 });
+app.post("/api/andriod/data",async (req,res)=>{
+    try {
+        const token = req.headers.authorization.replace("Bearer ","");
+        const autoriseUser = await dboperations.getUserAuthStatus(token);
+        if(autoriseUser.status){
+            const unitData = req.body;
+            unitData.userId = autoriseUser.id;
+            const saveUnitData = await dboperations.saveUnitdata(unitData);
+            res.json(saveUnitData);
+        }else{
+            res.status(500).send('Invalid user');
+        }
+    } catch (error) {
+        res.status(500).send('Error fetching products');
+    }
+})
 
 
 app.listen(port, () => {

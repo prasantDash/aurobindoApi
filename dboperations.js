@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const { ncrypt } = require("ncrypt-js");
 const jwt = require('jsonwebtoken');
 const config = require('./dbConfig');
+const moment = require('moment');
 
 const connection = mysql.createConnection(config);
 
@@ -91,16 +92,16 @@ async function usersLogin(data) {
             const { username, password_hash } = data;
             console.log("Username:", username);
             console.log("Decrypt password:", encrypt(password_hash));
-            const query = "SELECT * FROM users WHERE username=?";
-
+            const query = `SELECT * FROM users WHERE username=?`;
             const values = [username];
-            //console.log("Query:", query, "Values:", values);
+            
+            console.log("Query:", query, "Values:", values);
 
-            connection.query(query, values, (error, results) => {
+            connection.query(query,values,  (error, results) => {
                 if (error) {
                     reject(error);
                 }
-                console.log("User status:", results[0].active);
+                console.log("User status:", results);
                 if (results[0].active === 0) {
                     resolve({ message: 'User is inactive' });
                 }
@@ -122,10 +123,34 @@ async function usersLogin(data) {
         console.log(error);
     }
 }
+
+async function getUserAuthStatus(token){
+    const secretKey = "aurobindo";
+    const {id,username} = jwt.decode(token,secretKey);
+    return {id,username,status:true};
+}
+
+async function saveUnitdata(data){
+    const unitData = data;
+    const dateAndTime = moment(Number(unitData.timestamp)*1000).format("YYYY-MM-DD h:mm:ss");
+    unitData.lat = unitData.geocode.split(",")[0];
+    unitData.lng = unitData.geocode.split(",")[1];
+    unitData.dataAndTime = dateAndTime;
+    const insertQuery = `INSERT INTO unitdata.unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${unitData.timestamp}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
+    connection.query(insertQuery, (error, results) => {
+        console.log(results)
+        if (error) {
+            return ("Error on inserttion:", error);
+        }
+        return { message: 'created successfully',status:results };
+    });
+}
 module.exports = {
     getProducts: getProducts,
     getUsers: getUsers,
     createUsers: createUsers,
     usersLogin: usersLogin,
-    getUserProfile: getUserProfile
+    getUserProfile: getUserProfile,
+    getUserAuthStatus: getUserAuthStatus,
+    saveUnitdata:saveUnitdata
 };
