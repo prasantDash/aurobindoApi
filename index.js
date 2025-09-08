@@ -72,7 +72,7 @@ app.post("/api/android/data",async (req,res)=>{
     try {
         const token = req.headers.authorization.replace("Bearer ","");
         const autoriseUser = await dboperations.getUserAuthStatus(token);
-        console.log(autoriseUser);
+        
         if(autoriseUser.status){
             const unitData = req.body;
             unitData.userId = autoriseUser.id;

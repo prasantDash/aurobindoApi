@@ -87,11 +87,9 @@ async function usersLogin(data) {
     const secretKey = "aurobindo";
     try {
         return new Promise((resolve, reject) => {
-
-            var { encrypt, decrypt } = new ncrypt(secretKey);
+           
+            const { encrypt, decrypt } = new ncrypt(secretKey);
             const { username, password_hash } = data;
-            console.log("Username:", username);
-            console.log("Decrypt password:", encrypt(password_hash));
             const query = `SELECT * FROM users WHERE username=?`;
             const values = [username];
             
@@ -106,7 +104,9 @@ async function usersLogin(data) {
                     resolve({ message: 'User is inactive' });
                 }
                 if (decrypt(results[0].password_hash) === password_hash) {
-                    const token = jwt.sign({ id: results[0].id, username: results[0].username }, secretKey, { expiresIn: '1h' });
+                    // const token = jwt.sign({ id: results[0].id, username: results[0].username }, secretKey, { expiresIn: 60 * 60 }); // Token valid for 1 hour
+                    const token = jwt.sign({ id: results[0].id, username: results[0].username }, secretKey, { expiresIn: '1h' }); // Token valid for 1 hour
+                     
                     const response = {
                         id: results[0].id,
                         username: results[0].username, 
@@ -127,7 +127,7 @@ async function usersLogin(data) {
 async function getUserAuthStatus(token){
     const secretKey = "aurobindo";
     const {id,username,exp} = jwt.decode(token,secretKey);
-    let now = new Date();
+    let now = new Date();    
     if(exp < now.getTime()/1000){
         return {status:false};
     }
