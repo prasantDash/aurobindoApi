@@ -1,6 +1,6 @@
 const config = {
     user: 'root',
-    password: '',
+    password: 'root',
     server: '127.0.0.1', // e.g., 'localhost', 'SERVER_IP_ADDRESS'
     port: 3306,
     database: 'prasant_test',
