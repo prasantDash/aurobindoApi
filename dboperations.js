@@ -126,13 +126,16 @@ async function usersLogin(data) {
 
 async function getUserAuthStatus(token){
     const secretKey = "aurobindo";
-    const {id,username} = jwt.decode(token,secretKey);
+    const {id,username,exp} = jwt.decode(token,secretKey);
+    if(exp < moment().unix()){
+        return {status:false};
+    }
     return {id,username,status:true};
 }
 
 async function saveUnitdata(data){
     const unitData = data;
-    const dateAndTime = moment(Number(unitData.timestamp)*1000).format("YYYY-MM-DD h:mm:ss");
+    const dateAndTime = moment('2025-09-08T19:03:30.773Z').format("YYYY-MM-DD h:mm:ss");
     unitData.lat = unitData.geocode.split(",")[0];
     unitData.lng = unitData.geocode.split(",")[1];
     unitData.dataAndTime = dateAndTime;
