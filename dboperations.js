@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const { ncrypt } = require("ncrypt-js");
 const jwt = require('jsonwebtoken');
 const config = require('./dbConfig');
-const moment = require('moment');
+//const moment = require('moment');
 
 const connection = mysql.createConnection(config);
 
@@ -127,7 +127,8 @@ async function usersLogin(data) {
 async function getUserAuthStatus(token){
     const secretKey = "aurobindo";
     const {id,username,exp} = jwt.decode(token,secretKey);
-    if(exp < moment().unix()){
+    let now = new Date();
+    if(exp < now.getTime()/1000){
         return {status:false};
     }
     return {id,username,status:true};
@@ -135,7 +136,7 @@ async function getUserAuthStatus(token){
 
 async function saveUnitdata(data){
     const unitData = data;
-    const dateAndTime = moment('2025-09-08T19:03:30.773Z').format("YYYY-MM-DD h:mm:ss");
+    const dateAndTime = unitData.timestamp;
     unitData.lat = unitData.geocode.split(",")[0];
     unitData.lng = unitData.geocode.split(",")[1];
     unitData.dataAndTime = dateAndTime;
