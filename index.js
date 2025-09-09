@@ -79,6 +79,7 @@ app.post("/api/android/data",async (req,res)=>{
             console.log("Authorized User:", autoriseUser);
             console.log("Unit Data to be saved:", unitData);
             const saveUnitData = await dboperations.saveUnitdata(unitData);
+            console.log("Save Unit Data Result:", saveUnitData);
             if(saveUnitData.includes("Error")){
                 res.json({message:"Data saved successfully"});
             }else{
