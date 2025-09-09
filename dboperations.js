@@ -146,11 +146,13 @@ async function saveUnitdata(data){
     const insertQuery = `INSERT INTO unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${unitData.timestamp}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
     console.log("Insert Query:", insertQuery);
     connectionUnitData.query(insertQuery, (error, results) => {
-        console.log(results)
         if (error) {
-            return ("Error on inserttion:", error);
+            console.error("Error inserting unit data:", error);
+            return ("Error on inserttion:");
+        }else{
+            console.log("Unit data inserted successfully:", results);
+            return { message: 'created successfully' };
         }
-        return { message: 'created successfully',status:results };
     });
 }
 module.exports = {
