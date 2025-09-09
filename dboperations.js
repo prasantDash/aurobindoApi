@@ -137,8 +137,8 @@ async function getUserAuthStatus(token) {
   return { id, username, status: true };
 }
 
-function formattDate(date) {
-  const isoString = date;
+function formattDate(indate) {
+  const isoString = indate;
   const date = new Date(isoString);
 
   const year = date.getFullYear();
