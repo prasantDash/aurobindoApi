@@ -1,6 +1,6 @@
 const config = {
     user: 'root',
-    password: '',
+    password: 'root',
     server: 'localhost', // e.g., 'localhost', 'SERVER_IP_ADDRESS'
     port: 3306,
     database: 'prasant',
@@ -13,7 +13,7 @@ const config = {
 
 const configUnitData = {
     user: 'root',
-    password: '',
+    password: 'root',
     server: 'localhost', // e.g., 'localhost', 'SERVER_IP_ADDRESS'
     port: 3306,
     database: 'unitdata',
