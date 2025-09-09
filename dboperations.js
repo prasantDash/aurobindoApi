@@ -1,10 +1,12 @@
 const mysql = require('mysql');
 const { ncrypt } = require("ncrypt-js");
 const jwt = require('jsonwebtoken');
-const config = require('./dbConfig');
+const {config,configUnitData} = require('./dbConfig');
+
 //const moment = require('moment');
 
 const connection = mysql.createConnection(config);
+const connectionUnitData = mysql.createConnection(configUnitData);
 
 
 async function getProducts() {
@@ -141,9 +143,9 @@ async function saveUnitdata(data){
     unitData.lat = unitData.geocode.split(",")[0];
     unitData.lng = unitData.geocode.split(",")[1];
     unitData.dataAndTime = dateAndTime;
-    const insertQuery = `INSERT INTO unitdata.unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${unitData.timestamp}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
+    const insertQuery = `INSERT INTO unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${unitData.timestamp}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
     console.log("Insert Query:", insertQuery);
-    connection.query(insertQuery, (error, results) => {
+    connectionUnitData.query(insertQuery, (error, results) => {
         console.log(results)
         if (error) {
             return ("Error on inserttion:", error);
