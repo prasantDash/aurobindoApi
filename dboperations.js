@@ -154,22 +154,20 @@ function formattDate(indate) {
 }
 
 async function saveUnitdata(data) {
-  const unitData = data;
-  //console.log("Received unit data:", unitData);
-  const dateAndTime = formattDate(unitData.timestamp);
-  unitData.lat = unitData.geocode.split(",")[0];
-  unitData.lng = unitData.geocode.split(",")[1];
-  unitData.dataAndTime = formattDate(dateAndTime);
-  const insertQuery = `INSERT INTO unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${dateAndTime}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
-  //console.log("Insert Query:", insertQuery);
-  connectionUnitData.query(insertQuery, (error, results) => {
-    if (error) {
-      //console.error("Error inserting unit data:", error);
-      return "Error on inserttion:";
-    } else {
-      //console.log("Unit data inserted successfully:", results);
-      return { message: "created successfully" };
-    }
+  return new Promise((resolve, reject) => {
+    const unitData = data;
+    const dateAndTime = formattDate(unitData.timestamp);
+    unitData.lat = unitData.geocode.split(",")[0];
+    unitData.lng = unitData.geocode.split(",")[1];
+    unitData.dataAndTime = formattDate(dateAndTime);
+    const insertQuery = `INSERT INTO unitdata(tripId, driverId, deviceId, appVersion, geocode, timestamp, platform, speed, userId, lat, lng, dataAndTime) VALUES ('${unitData.tripId}','${unitData.driverId}','${unitData.deviceId}','${unitData.appVersion}','${unitData.geocode}','${dateAndTime}','${unitData.platform}','${unitData.speed}','${unitData.userId}','${unitData.lat}','${unitData.lng}','${unitData.dataAndTime}')`;
+    connectionUnitData.query(insertQuery, (error, results) => {
+      if (error) {
+        reject("Error on insertion:");
+      } else {
+        resolve(results);
+      }
+    });
   });
 }
 module.exports = {
