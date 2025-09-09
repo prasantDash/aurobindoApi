@@ -79,7 +79,11 @@ app.post("/api/android/data",async (req,res)=>{
             console.log("Authorized User:", autoriseUser);
             console.log("Unit Data to be saved:", unitData);
             const saveUnitData = await dboperations.saveUnitdata(unitData);
-            res.json(saveUnitData);
+            if(saveUnitData.includes("Error")){
+                res.json({message:"Data saved successfully"});
+            }else{
+                res.status(500).send('Error saving unit data');
+            }
         }else{
             res.status(500).send('token expired');
         }
